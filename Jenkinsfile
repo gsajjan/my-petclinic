@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven 3.5.2'
-        jdk 'Java 9'
+        maven 'Maven 3.3.9'
+        jdk 'Java 8'
     }
     stages {
         stage ('Initialize') {
@@ -16,7 +16,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                sh 'mvn package'
+                sh 'mvn clean package'
             }
         }
     }
