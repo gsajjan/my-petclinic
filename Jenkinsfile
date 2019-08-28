@@ -1,21 +1,28 @@
-node {
+pipeline {
 
-  checkout scm
-  def dockerImage
-
-    stage('Build image') {
-     dockerImage = docker.build("girishsajjanar/apche:girish") 
+    agent any
+    tools {
+        maven 'Maven_3.5.2' 
     }
-    stage ('Build') {
+    stages {
+        stage('Compile stage') {
             steps {
-                sh 'mvn package'
-            }
-    }
-
-    stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            dockerImage.push()
+                bat "mvn clean compile" 
         }
     }
+
+         stage('testing stage') {
+             steps {
+                bat "mvn test"
+        }
+    }
+
+          stage('deployment stage') {
+              steps {
+                bat "mvn deploy"
+        }
+    }
+
+  }
 
 }
