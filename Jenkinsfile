@@ -1,26 +1,33 @@
-pipeline {
-  agent any
-stages {
-    stage('Build') {
-      steps {
-        sh 'mvn package'
-      }
-    }
-    
-    stage('Make Container') {
-      steps {
-      sh "docker build -t snscaimito/ledger-service:${env.BUILD_ID} ."
-      sh "docker tag snscaimito/ledger-service:${env.BUILD_ID} snscaimito/ledger-service:latest"
-      }
-    }
-}
+node {
+    def app
 
- 
-    success {
-      withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-        sh "docker push snscaimito/ledger-service:${env.BUILD_ID}"
-        sh "docker push snscaimito/ledger-service:latest"
-      }
+    stage('Clone repository') {
+        /* Cloning the Repository to our Workspace */
+
+        checkout scm
+    }
+
+    stage('Build image') {
+        /* This builds the actual image */
+
+        app = docker.build("zelar/petclinics")
+    }
+
+    stage('Test image') {
+        
+        app.inside {
+            echo "Tests passed"
+        }
+    }
+
+    stage('Push image') {
+        /* 
+			You would need to first register with DockerHub before you can push images to your account
+		*/
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+            } 
+                echo "Trying to Push Docker Build to DockerHub"
     }
 }
