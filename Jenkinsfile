@@ -1,12 +1,15 @@
-node {
-	 stage('Clone repository') {
-        /* Cloning the Repository to our Workspace */
+pipeline {
+  agent any
 
-        checkout scm
-      }  
+  tools {
+    maven 'mvn-3.5.2'
+  }
 
-	stage('Compile-Package'){
-	 def mvnHome = tool name: 'maven', type: 'maven'
-	 sh "${mvnHome}/bin/mvn package"
-	}
+  stages {
+    stage('Build') {
+      steps {
+        sh 'clean mvn package'
+      }
+    }
+ }
 }
