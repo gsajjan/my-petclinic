@@ -4,7 +4,7 @@ node {
   def dockerImage
     stage('Build') {
             steps {
-                sh 'mvn cliean install -Dmaven.test.skip=true'
+                sh 'mvn clean install'
             }
         }
 
