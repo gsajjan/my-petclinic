@@ -4,7 +4,7 @@ node {
   def dockerImage
 
   stage('Build image') {
-    dockerImage = docker.build("girishsajjanar")
+    dockerImage = docker build -t girishsajjanar/petclinic:build . 
   }
 
   stage('Push image') {
