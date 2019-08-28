@@ -2,14 +2,9 @@ node {
 
   checkout scm
   def dockerImage
-    stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
 
     stage('Build image') {
-     dockerImage = docker.build("girishsajjanar/petclinic:girish") 
+     dockerImage = docker.build("girishsajjanar/apche:girish") 
     }
     
     stage('Push image') {
