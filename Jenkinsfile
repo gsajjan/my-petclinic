@@ -2,6 +2,11 @@ node {
 
   checkout scm
   def dockerImage
+    stage('Build') {
+            steps {
+                sh 'mvn cliean install -Dmaven.test.skip=true'
+            }
+        }
 
     stage('Build image') {
      dockerImage = docker.build("girishsajjanar/petclinic:girish") 
