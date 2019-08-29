@@ -18,13 +18,12 @@ pipeline {
       sh "docker tag snscaimito/ledger-service:${env.BUILD_ID} snscaimito/ledger-service:latest"
       }
     }
-	 stage {
-      withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-        sh "docker push snscaimito/ledger-service:${env.BUILD_ID}"
-        sh "docker push snscaimito/ledger-service:latest"
-      }
+	 stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            dockerImage.push()
+        }
     }
+
 }
 
  
