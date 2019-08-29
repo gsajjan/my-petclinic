@@ -1,7 +1,20 @@
-pnode('linux') {
-  def maven = docker.image('maven:latest')
-  maven.pull() // make sure we have the latest available from Docker Hub
-  maven.inside {
-    // …as above
-  }
+node {
+
+  checkout scm
+  def dockerImage
+
+    stage('Build image') {
+     dockerImage=docker.image('maven:3.3.3-jdk-8').inside {
+  git '…your-sources…'
+  sh 'mvn -B clean install'
+}
+ 
+    }
+    
+    stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            dockerImage.push()
+        }
+    }
+
 }
