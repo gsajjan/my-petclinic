@@ -2,10 +2,10 @@ pipeline {
   agent any
 
   tools {
-    maven 'Maven 3.5.2'
+   maven 'Maven 3.5.2'
+        jdk 'Java 9'
   }
 
-  stages {
     stage('Build') {
       steps {
         sh 'mvn package'
@@ -24,7 +24,7 @@ pipeline {
         }
     }
 
-}
+
 
  
    
