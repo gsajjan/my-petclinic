@@ -11,9 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build('maven:3.3.3-jdk-8')
-      
-      .inside {
+        app = docker.build('maven:3.3.3-jdk-8').inside {
   git 'https://github.com/gsajjan/my-petclinic.git'
   sh 'mvn clean package'
 }
