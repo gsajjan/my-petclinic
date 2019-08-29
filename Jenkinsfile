@@ -5,7 +5,7 @@ node {
 
     stage('Build image') {
      dockerImage=docker.image('maven:3.3.3-jdk-8').inside {
-  git '…your-sources…'
+  git 'https://github.com/gsajjan/my-petclinic.git'
   sh 'mvn -B clean install'
 }
  
