@@ -1,29 +1,20 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
-        }
-    }
-    stages {
-        stage('Build image') { 
+    agent any
+    
+
+stages{
+        stage('Build'){
             steps {
-                
-                docker = docker.build("girishsajjanar/pet:girish")
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
+                sh 'mvn clean package'
             }
             post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
         }
-		
-    }
-       
-}
 
+        
+    }
+}
