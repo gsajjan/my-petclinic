@@ -22,10 +22,7 @@ pipeline {
                 }
             }
         }
-		stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            dockerImage.push()
-        }
+		
     }
        
     }
