@@ -6,9 +6,10 @@ pipeline {
         }
     }
     stages {
-        stage('Build') { 
+        stage('Build image') { 
             steps {
                 sh 'mvn -B -DskipTests clean package' 
+                docker = docker.build("girishsajjanar/pet:girish")
             }
         }
         stage('Test') {
@@ -21,10 +22,11 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
-            }
+		stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            dockerImage.push()
         }
+    }
+       
     }
 }
