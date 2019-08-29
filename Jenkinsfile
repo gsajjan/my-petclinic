@@ -6,7 +6,7 @@ pipeline {
         }
     }
     stages {
-        stage('Build image') { 
+        stage('Build') { 
             steps {
                 sh 'mvn -B -DskipTests clean package' 
                 docker = docker.build("girishsajjanar/pet:girish")
