@@ -1,27 +1,25 @@
 pipeline {
-    agent any
-
-        stage('Build'){
+    agent {
+        docker {
+            image 'maven:3-alpine'
+            docker = docker.build("girishsajjanar/apche:girish")
+        }
+    }
+    stages {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+        stage('Test') { 
+            steps {
+                sh 'mvn test' 
             }
             post {
-                success {
-                    echo 'Now Archiving...'
-                    archiveArtifacts artifacts: '**/target/*.war'
+                always {
+                    junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
-		stage('Build image') {
-     dockerImage = docker.build("girishsajjanar/apche:girish") 
     }
-    
-    stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            dockerImage.push()
-        }
-    }
-
-        
-    
 }
