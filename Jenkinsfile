@@ -1,21 +1,30 @@
-node {
-
-  checkout scm
-  def dockerImage
-
-    stage('Build image') {
-     dockerImage=docker.image('maven:3.3.3-jdk-8').inside {
- 
-  sh 'mvn clean package'
-   sh 'docker run  maven:3.3.3-jdk-8'
-}
- 
-    }
-    
-    stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            dockerImage.push()
+pipeline {
+  agent none
+  stages {
+    stage('Maven Install') {
+      agent {
+        docker {
+          image 'maven:3.5.0'
         }
+      }
+      steps {
+        sh 'mvn clean install'
+      }
     }
-
+    stage('Docker Build') {
+      agent any
+      steps {
+        sh 'docker build -t shanem/spring-petclinic:latest .'
+      }
+    }
+    stage('Docker Push') {
+      agent any
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh 'docker push shanem/spring-petclinic:latest'
+        }
+      }
+    }
+  }
 }
