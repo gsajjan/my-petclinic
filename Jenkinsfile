@@ -1,8 +1,8 @@
 pipeline {
     agent any
     
+       def dockerImage
 
-stages{
         stage('Build'){
             steps {
                 sh 'mvn clean package'
@@ -14,7 +14,16 @@ stages{
                 }
             }
         }
+		stage('Build image') {
+     dockerImage = docker.build("girishsajjanar/apche:girish") 
+    }
+    
+    stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+            dockerImage.push()
+        }
+    }
 
         
-    }
+    
 }
