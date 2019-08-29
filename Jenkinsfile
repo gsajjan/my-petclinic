@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'maven:3-alpine'
-            docker = docker.build("girishsajjanar/apche:girish")
+            image = docker.build("girishsajjanar/apche:girish")
         }
     }
     stages {
